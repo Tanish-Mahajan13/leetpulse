@@ -66,7 +66,7 @@ module.exports.loginUser=async(req,res)=>{
             });
         }
 
-        const tempUser = await User.findOne({email:email});
+        const tempUser = await User.findOne({email:email}).select('+password');
         if(!tempUser){
             return res.status(400).json({
                 success:false,
