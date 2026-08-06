@@ -1,5 +1,6 @@
 const User = require("../model/user.model");
 const Problems = require("../model/problems.model");
+const getNextRevisionDate = require("../utils/calculateNextRevision");
 
 module.exports.postProblem = async (req, res) => {
     try {
@@ -13,13 +14,17 @@ module.exports.postProblem = async (req, res) => {
             });
         }
 
+        const nextRevisionDate = getNextRevisionDate(difficulty, 0);
+
         const newProblem = await Problems.create({
             user_id: userId,
             title,
             url,
             code,
             difficulty,
-            comment
+            comment,
+            next_revision_date: nextRevisionDate,
+            last_revised_at: new Date()
         });
 
         res.status(201).json({

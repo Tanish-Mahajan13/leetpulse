@@ -14,6 +14,9 @@ app.use(express.urlencoded({ extended: true }));
 const userRouter = require("./routes/user.route");
 app.use("/users", userRouter);
 
+const problemsRouter = require("./routes/problems.route");
+app.use("/problem", problemsRouter);
+
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('DB Connected!'))
   .catch((e) => console.log(e));
