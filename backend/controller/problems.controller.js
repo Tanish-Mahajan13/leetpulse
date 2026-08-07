@@ -48,3 +48,154 @@ module.exports.postProblem = async (req, res) => {
         });
     }
 };
+
+module.exports.getProblems = async(req,res)=>{
+    try {
+        const userId = req.userId;
+        const allProblems = await Problems.find({user_id:userId}).sort({createdAt : -1});
+
+        res.status(200).json({
+            success: true,
+            message: "Problems fetched",
+            problems : allProblems
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Couldnt fetch problems."
+        });
+    }
+}
+
+module.exports.dueProblems = async(req,res)=>{
+    try {
+        const userId = req.userId;
+        const dueProblems = await Problems.find({ user_id: userId, next_revision_date: 
+            { $lte: new Date() } }).sort({next_revision_date : 1})
+
+        res.status(200).json({
+            success: true,
+            message: "Due Problems fetched",
+            problems : dueProblems
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Couldnt fetch problems."
+        });
+    }
+}
+
+module.exports.reviseProblem = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const problemId = req.params.id;
+        const { success } = req.body;
+
+        let problem = await Problems.findById(problemId);
+
+        if (!problem) {
+            return res.status(404).json({
+                success: false,
+                message: "Problem not found"
+            });
+        }
+
+        if (!problem.user_id.equals(userId)) {
+            return res.status(403).json({
+                success: false,
+                message: "You are not allowed to modify this problem"
+            });
+        }
+
+        const newRevisionCount = success ? problem.revision_count + 1 : 0;
+        const nextRevisionDate = getNextRevisionDate(problem.difficulty, newRevisionCount);
+
+        problem.revision_count = newRevisionCount;
+        problem.next_revision_date = nextRevisionDate;
+        problem.last_revised_at = new Date();
+
+        await problem.save();
+
+        res.status(200).json({
+            success: true,
+            message: success ? "Great job! Interval increased." : "No worries, resetting the interval.",
+            problem
+        });
+
+    } catch (error) {
+        console.error("Revise Problem Error:", error);
+        res.status(500).json({
+            success: false,
+            message: "Server Error while revising problem"
+        });
+    }
+};
+
+module.exports.toggleFlag = async(req,res)=>{
+    try {
+        const userId = req.userId;
+        const problemId = req.params.id;
+
+        let problem = await Problems.findById(problemId);
+
+        if (!problem) {
+            return res.status(404).json({
+                success: false,
+                message: "Problem not found"
+            });
+        }
+
+        if (!problem.user_id.equals(userId)) {
+            return res.status(403).json({
+                success: false,
+                message: "You are not allowed to modify this problem"
+            });
+        }
+
+        // if(problem.is_flagged){
+        //     problem.is_flagged = false;
+        // }
+        // else{
+        //     problem.is_flagged = true;
+        // }
+
+        problem.is_flagged = !problem.is_flagged;
+
+        await problem.save();
+
+        res.status(200).json({
+            success: true,
+            message: "flag changed",
+            problem
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Server Error"
+        });
+    }
+}
+
+module.exports.getFlaggedProblems = async(req,res)=>{
+    try {
+        const userId = req.userId;
+        const flaggedProblems = await Problems.find({user_id:userId , is_flagged:true})
+
+        res.status(200).json({
+            success: true,
+            message: "Flagged Problem fetched successfully",
+            problems: flaggedProblems
+        });
+
+    } catch (error) {
+        console.error("Flagged Problem Error:", error);
+        res.status(500).json({
+            success: false,
+            message: "Server Error"
+        });
+    }
+}

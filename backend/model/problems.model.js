@@ -38,6 +38,10 @@ const problemsSchema = new mongoose.Schema({
     next_revision_date: {
         type: Date,
         default: Date.now
+    },
+    is_flagged:{
+        type:Boolean,
+        default:false
     }
 }, { timestamps: true });
 
