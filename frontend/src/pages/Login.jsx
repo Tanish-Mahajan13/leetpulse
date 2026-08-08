@@ -32,6 +32,8 @@ function Login() {
             </form>
             {error && <p style={{ color: "red" }}>{error}</p>}
             <Link to="/register">Need an account? Register</Link>
+            <br />
+            <Link to="/">Back to Home</Link>
         </div>
     );
 }

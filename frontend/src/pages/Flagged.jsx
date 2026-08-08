@@ -11,7 +11,7 @@ function Flagged() {
 
     async function fetchFlagged() {
         try {
-            const res = await api.get("/problems/flagged");
+            const res = await api.get("/problems/flaggedProblems")
             setProblems(res.data.problem);
         } catch (err) {
             setError(err.response?.data?.message || "Could not load flagged problems");
