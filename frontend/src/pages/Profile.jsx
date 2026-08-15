@@ -35,6 +35,16 @@ function Profile() {
     const mediumCount = problems.filter((p) => p.difficulty === "Medium").length;
     const hardCount = problems.filter((p) => p.difficulty === "Hard").length;
 
+    const easyPct = total ? (easyCount / total) * 100 : 0;
+    const mediumPct = total ? (mediumCount / total) * 100 : 0;
+    const hardPct = total ? (hardCount / total) * 100 : 0;
+
+    const pieGradient = `conic-gradient(
+        var(--easy) 0% ${easyPct}%,
+        var(--medium) ${easyPct}% ${easyPct + mediumPct}%,
+        var(--hard) ${easyPct + mediumPct}% 100%
+    )`;
+
     return (
         <div className="page-container">
             <div className="profile-header">
@@ -61,36 +71,29 @@ function Profile() {
             </div>
 
             <h3 className="breakdown-title">Difficulty Breakdown</h3>
-            <div className="breakdown-list">
-                <div className="breakdown-row">
-                    <span className="difficulty-tag easy">Easy</span>
-                    <div className="breakdown-bar-track">
-                        <div
-                            className="breakdown-bar-fill easy"
-                            style={{ width: total ? `${(easyCount / total) * 100}%` : "0%" }}
-                        ></div>
+            <div className="pie-section">
+                <div className="pie-chart" style={{ background: total ? pieGradient : "var(--border)" }}>
+                    <div className="pie-chart-hole">
+                        <span className="pie-total">{total}</span>
+                        <span className="pie-total-label">solved</span>
                     </div>
-                    <span className="breakdown-count">{easyCount}</span>
                 </div>
-                <div className="breakdown-row">
-                    <span className="difficulty-tag medium">Medium</span>
-                    <div className="breakdown-bar-track">
-                        <div
-                            className="breakdown-bar-fill medium"
-                            style={{ width: total ? `${(mediumCount / total) * 100}%` : "0%" }}
-                        ></div>
+                <div className="pie-legend">
+                    <div className="legend-row">
+                        <span className="legend-dot easy"></span>
+                        <span className="legend-label">Easy</span>
+                        <span className="legend-count">{easyCount}</span>
                     </div>
-                    <span className="breakdown-count">{mediumCount}</span>
-                </div>
-                <div className="breakdown-row">
-                    <span className="difficulty-tag hard">Hard</span>
-                    <div className="breakdown-bar-track">
-                        <div
-                            className="breakdown-bar-fill hard"
-                            style={{ width: total ? `${(hardCount / total) * 100}%` : "0%" }}
-                        ></div>
+                    <div className="legend-row">
+                        <span className="legend-dot medium"></span>
+                        <span className="legend-label">Medium</span>
+                        <span className="legend-count">{mediumCount}</span>
                     </div>
-                    <span className="breakdown-count">{hardCount}</span>
+                    <div className="legend-row">
+                        <span className="legend-dot hard"></span>
+                        <span className="legend-label">Hard</span>
+                        <span className="legend-count">{hardCount}</span>
+                    </div>
                 </div>
             </div>
         </div>
