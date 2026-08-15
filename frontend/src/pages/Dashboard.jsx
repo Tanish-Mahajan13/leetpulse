@@ -100,10 +100,9 @@ function Dashboard() {
             <ul className="problem-list">
                 {sortedProblems.map((p) => (
                     <li key={p._id} className={`problem-card ${p.difficulty.toLowerCase()}`}>
+                        <Link to={`/problem/${p._id}`} className="card-link-overlay" aria-label={`View ${p.title}`}></Link>
                         <div>
-                            <div className="problem-title">
-                                <Link to={`/problem/${p._id}`} className="problem-title-link">{p.title}</Link>
-                            </div>
+                            <div className="problem-title">{p.title}</div>
                             <div className="problem-meta">next revision: {new Date(p.next_revision_date).toLocaleDateString()}</div>
                         </div>
                         <div className="problem-actions">

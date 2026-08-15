@@ -66,15 +66,13 @@ function ProblemDetail() {
             <Link to="/dashboard">&larr; Back to Dashboard</Link>
 
             <div className="problem-detail-header">
-                <h2>{problem.title}</h2>
-                <span className={`difficulty-tag ${problem.difficulty.toLowerCase()}`}>{problem.difficulty}</span>
-            </div>
-
-            <div className="detail-actions">
+                <div className="problem-detail-title-group">
+                    <h2>{problem.title}</h2>
+                    <span className={`difficulty-tag ${problem.difficulty.toLowerCase()}`}>{problem.difficulty}</span>
+                </div>
                 <button className="btn-secondary" onClick={() => setIsEditing(!isEditing)}>
                     {isEditing ? "Cancel" : "Edit"}
                 </button>
-                <button className="btn-danger" onClick={handleDelete}>Delete</button>
             </div>
 
             {error && <p className="error-text">{error}</p>}
@@ -109,6 +107,10 @@ function ProblemDetail() {
                     </div>
                 </>
             )}
+
+            <div className="detail-footer">
+                <button className="btn-danger" onClick={handleDelete}>Delete Problem</button>
+            </div>
         </div>
     );
 }
