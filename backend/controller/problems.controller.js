@@ -40,7 +40,6 @@ module.exports.postProblem = async (req, res) => {
                 message: "You've already added this problem."
             });
         }
-
         console.error("Add Problem Error:", error);
         res.status(500).json({
             success: false,
@@ -49,44 +48,46 @@ module.exports.postProblem = async (req, res) => {
     }
 };
 
-module.exports.getProblems = async(req,res)=>{
+module.exports.getProblems = async (req, res) => {
     try {
         const userId = req.userId;
-        const allProblems = await Problems.find({user_id:userId}).sort({createdAt : -1});
+        const allProblems = await Problems.find({ user_id: userId }).sort({ createdAt: -1 });
 
         res.status(200).json({
             success: true,
             message: "Problems fetched",
-            problems : allProblems
+            problems: allProblems
         });
-
     } catch (error) {
+        console.error("Get Problems Error:", error);
         res.status(500).json({
             success: false,
-            message: "Couldnt fetch problems."
+            message: "Couldn't fetch problems."
         });
     }
-}
+};
 
-module.exports.dueProblems = async(req,res)=>{
+module.exports.dueProblems = async (req, res) => {
     try {
         const userId = req.userId;
-        const dueProblems = await Problems.find({ user_id: userId, next_revision_date: 
-            { $lte: new Date() } }).sort({next_revision_date : 1})
+        const dueProblems = await Problems.find({
+            user_id: userId,
+            next_revision_date: { $lte: new Date() }
+        }).sort({ next_revision_date: 1 });
 
         res.status(200).json({
             success: true,
             message: "Due Problems fetched",
-            problems : dueProblems
+            problems: dueProblems
         });
-
     } catch (error) {
+        console.error("Due Problems Error:", error);
         res.status(500).json({
             success: false,
-            message: "Couldnt fetch problems."
+            message: "Couldn't fetch problems."
         });
     }
-}
+};
 
 module.exports.reviseProblem = async (req, res) => {
     try {
@@ -134,7 +135,7 @@ module.exports.reviseProblem = async (req, res) => {
     }
 };
 
-module.exports.toggleFlag = async(req,res)=>{
+module.exports.toggleFlag = async (req, res) => {
     try {
         const userId = req.userId;
         const problemId = req.params.id;
@@ -155,15 +156,7 @@ module.exports.toggleFlag = async(req,res)=>{
             });
         }
 
-        // if(problem.is_flagged){
-        //     problem.is_flagged = false;
-        // }
-        // else{
-        //     problem.is_flagged = true;
-        // }
-
         problem.is_flagged = !problem.is_flagged;
-
         await problem.save();
 
         res.status(200).json({
@@ -173,24 +166,24 @@ module.exports.toggleFlag = async(req,res)=>{
         });
 
     } catch (error) {
+        console.error("Toggle Flag Error:", error);
         res.status(500).json({
             success: false,
             message: "Server Error"
         });
     }
-}
+};
 
-module.exports.getFlaggedProblems = async(req,res)=>{
+module.exports.getFlaggedProblems = async (req, res) => {
     try {
         const userId = req.userId;
-        const flaggedProblems = await Problems.find({user_id:userId , is_flagged:true})
+        const flaggedProblems = await Problems.find({ user_id: userId, is_flagged: true });
 
         res.status(200).json({
             success: true,
-            message: "Flagged Problem fetched successfully",
+            message: "Flagged Problems fetched successfully",
             problems: flaggedProblems
         });
-
     } catch (error) {
         console.error("Flagged Problem Error:", error);
         res.status(500).json({
@@ -198,7 +191,7 @@ module.exports.getFlaggedProblems = async(req,res)=>{
             message: "Server Error"
         });
     }
-}
+};
 
 module.exports.getProblemById = async (req, res) => {
     try {
@@ -230,6 +223,94 @@ module.exports.getProblemById = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Server Error"
+        });
+    }
+};
+
+module.exports.updateProblem = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const problemId = req.params.id;
+        const { title, url, code, difficulty, comment } = req.body;
+
+        const problem = await Problems.findById(problemId);
+
+        if (!problem) {
+            return res.status(404).json({
+                success: false,
+                message: "Problem not found"
+            });
+        }
+
+        if (!problem.user_id.equals(userId)) {
+            return res.status(403).json({
+                success: false,
+                message: "You are not allowed to modify this problem"
+            });
+        }
+
+        if (title !== undefined) problem.title = title;
+        if (url !== undefined) problem.url = url;
+        if (code !== undefined) problem.code = code;
+        if (difficulty !== undefined) problem.difficulty = difficulty;
+        if (comment !== undefined) problem.comment = comment;
+
+        await problem.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Problem updated successfully",
+            problem
+        });
+
+    } catch (error) {
+        if (error.code === 11000) {
+            return res.status(409).json({
+                success: false,
+                message: "You already have a problem with this URL"
+            });
+        }
+        console.error("Update Problem Error:", error);
+        res.status(500).json({
+            success: false,
+            message: "Server Error while updating problem"
+        });
+    }
+};
+
+module.exports.deleteProblem = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const problemId = req.params.id;
+
+        const problem = await Problems.findById(problemId);
+
+        if (!problem) {
+            return res.status(404).json({
+                success: false,
+                message: "Problem not found"
+            });
+        }
+
+        if (!problem.user_id.equals(userId)) {
+            return res.status(403).json({
+                success: false,
+                message: "You are not allowed to delete this problem"
+            });
+        }
+
+        await problem.deleteOne();
+
+        res.status(200).json({
+            success: true,
+            message: "Problem deleted successfully"
+        });
+
+    } catch (error) {
+        console.error("Delete Problem Error:", error);
+        res.status(500).json({
+            success: false,
+            message: "Server Error while deleting problem"
         });
     }
 };

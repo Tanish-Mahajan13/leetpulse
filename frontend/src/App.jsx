@@ -7,6 +7,7 @@ import Due from "./pages/Due";
 import Flagged from "./pages/Flagged";
 import ProblemDetail from "./pages/ProblemDetail";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Profile from "./pages/Profile";
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
                 <Route path="/due" element={<ProtectedRoute><Due /></ProtectedRoute>} />
                 <Route path="/flagged" element={<ProtectedRoute><Flagged /></ProtectedRoute>} />
                 <Route path="/problem/:id" element={<ProtectedRoute><ProblemDetail /></ProtectedRoute>} />
+                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             </Routes>
         </BrowserRouter>
     );
