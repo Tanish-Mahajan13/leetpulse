@@ -20,4 +20,4 @@ function getNextRevisionDate(difficulty, revisionCount, fromDate = new Date()) {
     return nextDate;
 }
 
-module.exports = getNextRevisionDate;
+module.exports = getNextRevisionDate; 
