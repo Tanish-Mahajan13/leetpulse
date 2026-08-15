@@ -14,7 +14,6 @@ function Register() {
     async function handleSubmit(e) {
         e.preventDefault();
         setError("");
-
         try {
             await api.post("/users/register", formData);
             navigate("/login");
@@ -24,34 +23,18 @@ function Register() {
     }
 
     return (
-        <div>
-            <h1>Register</h1>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                />
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                />
+        <div className="auth-page">
+            <form className="auth-card" onSubmit={handleSubmit}>
+                <h2>Create account</h2>
+                <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleChange} />
+                <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
+                <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} />
                 <button type="submit">Register</button>
             </form>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            <Link to="/login">Already have an account? Login</Link>
+            {error && <p className="error-text">{error}</p>}
+            <div className="auth-links">
+                <Link to="/login">Already have an account? Login</Link>
+            </div>
         </div>
     );
 }

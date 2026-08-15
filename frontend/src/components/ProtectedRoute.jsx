@@ -16,10 +16,10 @@ function ProtectedRoute({ children }) {
     if (isAuth === false) return <Navigate to="/login" />;
 
     return (
-        <>
+        <div className="app-layout">
             <Navbar />
-            {children}
-        </>
+            <main className="main-content">{children}</main>
+        </div>
     );
 }
 

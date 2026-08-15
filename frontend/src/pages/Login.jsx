@@ -23,17 +23,18 @@ function Login() {
     }
 
     return (
-        <div>
-            <h1>Login</h1>
-            <form onSubmit={handleSubmit}>
+        <div className="auth-page">
+            <form className="auth-card" onSubmit={handleSubmit}>
+                <h2>Login</h2>
                 <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
                 <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} />
                 <button type="submit">Login</button>
             </form>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            <Link to="/register">Need an account? Register</Link>
-            <br />
-            <Link to="/">Back to Home</Link>
+            {error && <p className="error-text">{error}</p>}
+            <div className="auth-links">
+                <Link to="/register">Need an account? Register</Link>
+                <Link to="/">Back to Home</Link>
+            </div>
         </div>
     );
 }

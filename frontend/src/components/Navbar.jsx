@@ -14,11 +14,17 @@ function Navbar() {
     }
 
     return (
-        <nav style={{ display: "flex", gap: "1rem", padding: "1rem", borderBottom: "1px solid #ccc" }}>
-            <Link to="/dashboard">Dashboard</Link>
-            <Link to="/due">Due</Link>
-            <Link to="/flagged">Flagged</Link>
-            <button onClick={handleLogout}>Logout</button>
+        <nav className="sidebar">
+            <div className="logo">
+                <span className="pulse-dot"></span>
+                LeetPulse
+            </div>
+            <div className="sidebar-links">
+                <Link to="/dashboard">Dashboard</Link>
+                <Link to="/due">Due</Link>
+                <Link to="/flagged">Flagged</Link>
+            </div>
+            <button className="logout-btn" onClick={handleLogout}>Logout</button>
         </nav>
     );
 }

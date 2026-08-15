@@ -199,3 +199,37 @@ module.exports.getFlaggedProblems = async(req,res)=>{
         });
     }
 }
+
+module.exports.getProblemById = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const problemId = req.params.id;
+
+        const problem = await Problems.findById(problemId);
+
+        if (!problem) {
+            return res.status(404).json({
+                success: false,
+                message: "Problem not found"
+            });
+        }
+
+        if (!problem.user_id.equals(userId)) {
+            return res.status(403).json({
+                success: false,
+                message: "You are not allowed to view this problem"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            problem
+        });
+    } catch (error) {
+        console.error("Get Problem Error:", error);
+        res.status(500).json({
+            success: false,
+            message: "Server Error"
+        });
+    }
+};

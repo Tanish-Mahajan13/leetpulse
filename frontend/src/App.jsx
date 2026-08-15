@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Due from "./pages/Due";
 import Flagged from "./pages/Flagged";
+import ProblemDetail from "./pages/ProblemDetail";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
                 <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                 <Route path="/due" element={<ProtectedRoute><Due /></ProtectedRoute>} />
                 <Route path="/flagged" element={<ProtectedRoute><Flagged /></ProtectedRoute>} />
+                <Route path="/problem/:id" element={<ProtectedRoute><ProblemDetail /></ProtectedRoute>} />
             </Routes>
         </BrowserRouter>
     );

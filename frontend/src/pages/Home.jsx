@@ -14,11 +14,15 @@ function Home() {
     }
 
     return (
-        <div style={{ display: "flex", justifyContent: "space-between", padding: "1rem" }}>
-            <h1>LeetPulse</h1>
-            <div style={{ display: "flex", gap: "1rem" }}>
-                <button onClick={handleLoginClick}>Login</button>
-                <button onClick={() => navigate("/register")}>Sign Up</button>
+        <div className="home-hero">
+            <div className="logo">
+                <span className="pulse-dot"></span>
+                <h1>LeetPulse</h1>
+            </div>
+            <p>Solve it once. Get reminded before you forget it.</p>
+            <div className="home-actions">
+                <button className="btn-primary" onClick={handleLoginClick}>Login</button>
+                <button className="btn-secondary" onClick={() => navigate("/register")}>Sign Up</button>
             </div>
         </div>
     );
