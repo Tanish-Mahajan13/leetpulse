@@ -244,6 +244,7 @@ a:hover {
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
+    margin-top: 1rem;
     margin-bottom: 2rem;
 }
 
@@ -730,4 +731,11 @@ a:hover {
     fill: #ffffff;
     width: 14px;
     height: 14px;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
 }
